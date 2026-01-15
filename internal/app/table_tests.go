@@ -84,7 +84,7 @@ func (c *consoleWriter) testsTable(packages []*parse.Package, option TestTableOp
 		all = append(all, pkgTests.skipped...)
 		all = append(all, pkgTests.failed...)
 
-		for _, t := range all {
+		for j, t := range all {
 			// TODO(mf): why are we sorting this?
 			t.SortEvents()
 
@@ -99,11 +99,11 @@ func (c *consoleWriter) testsTable(packages []*parse.Package, option TestTableOp
 				testName:    testName,
 				packageName: packageName,
 			}
+			if i > 0 && j == 0 && data.Rows() > 0 {
+				// Add a blank row between packages.
+				data.Append(testRow{}.toRow())
+			}
 			data.Append(row.toRow())
-		}
-		if i != (len(packages) - 1) {
-			// Add a blank row between packages.
-			data.Append(testRow{}.toRow())
 		}
 	}
 
